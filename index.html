@@ -3,7 +3,11 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#FAF7EE" />
   <title>Vyapar Hub - Production-Grade SaaS PWA</title>
 
   <!-- Tailwind CSS CDN -->
@@ -111,6 +115,11 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
     body {
       background-color: #FAF7EE;
       color: #001F5B;
@@ -119,6 +128,55 @@
       margin: 0;
       padding: 0;
       scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Prevent mobile iOS zoom when tapping inputs */
+    @media (max-width: 768px) {
+      input:not([type="checkbox"]):not([type="radio"]),
+      select,
+      textarea {
+        font-size: 16px !important;
+      }
+    }
+
+    /* Safe Area insets for bottom navigation on modern mobile phones (iPhone Home Bar / Android Gestures) */
+    #bottomNav_shopkeeper,
+    #bottomNav_customer {
+      padding-bottom: calc(0.625rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Mobile native tap responsiveness */
+    button, a, input, select, textarea, .sk-nav-btn, .cust-nav-btn {
+      touch-action: manipulation;
+    }
+
+    .sk-nav-btn, .cust-nav-btn {
+      min-height: 44px;
+      justify-content: center;
+    }
+
+    /* Smooth momentum scrolling for table and modal wrappers */
+    .overflow-x-auto, .overflow-y-auto {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Clean custom scrollbar for modals and tables */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 31, 91, 0.04);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 31, 91, 0.2);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(217, 4, 41, 0.4);
     }
 
     .perspective-canvas {
@@ -271,7 +329,7 @@
 
   <!-- Real-Time Slide-in Order Toast Notification for Shopkeeper -->
   <div id="orderToast"
-    class="fixed top-20 right-4 z-50 hidden max-w-sm w-full bg-white border-2 border-brand-mustard rounded-3xl p-4 shadow-2xl card-3d">
+    class="fixed top-16 sm:top-20 right-2 sm:right-4 left-2 sm:left-auto z-50 hidden max-w-sm sm:w-full bg-white border-2 border-brand-mustard rounded-3xl p-4 shadow-2xl card-3d">
     <div class="flex items-start gap-3">
       <div
         class="w-10 h-10 rounded-2xl bg-brand-crimson text-white flex items-center justify-center flex-shrink-0 animate-bounce">
@@ -308,10 +366,10 @@
 
     <!-- Top Sticky Landing Header / Accreditation Bar -->
     <header
-      class="fixed top-0 left-0 right-0 z-50 glass-vintage px-4 sm:px-8 py-3.5 border-b border-brand-navy/10 flex items-center justify-between">
-      <div class="flex items-center gap-3">
+      class="fixed top-0 left-0 right-0 z-50 glass-vintage px-3 sm:px-8 py-2.5 sm:py-3.5 border-b border-brand-navy/10 flex items-center justify-between">
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <!-- Permanent Red Brand SVG Logo -->
-        <div class="w-10 h-10 flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
           <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-md">
             <path d="M15 42 Q 60 26 105 42 L 98 22 Q 60 12 22 22 Z" fill="#D90429" />
             <path d="M22 22 L 34 39 L 46 22 L 58 39 L 70 22 L 82 39 L 94 22 L 98 22 L 105 42 L 15 42 Z" fill="#FFFDD0"
@@ -329,10 +387,9 @@
             <circle cx="60" cy="92" r="2.5" fill="#FFDB58" />
           </svg>
         </div>
-        <div>
-          <span class="font-display font-black text-xl tracking-tight text-brand-navy block leading-none">VYAPAR
-            HUB</span>
-          <span class="text-[10px] font-bold text-brand-navy/60 tracking-wider uppercase">B2B2C Kirana SaaS</span>
+        <div class="min-w-0">
+          <span class="font-display font-black text-base sm:text-xl tracking-tight text-brand-navy block leading-none truncate">VYAPAR HUB</span>
+          <span class="text-[9px] sm:text-[10px] font-bold text-brand-navy/60 tracking-wider uppercase">B2B2C Kirana SaaS</span>
         </div>
       </div>
 
@@ -344,14 +401,14 @@
       </div>
 
       <!-- Quick Action Gateway -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
         <button onclick="openAuthModal('shopkeeper')"
-          class="px-3 py-1.5 text-xs font-bold bg-brand-navy text-brand-cream hover:bg-brand-crimson rounded-xl shadow-md transition-all active:scale-95">
-          Shopkeeper Sign In
+          class="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold bg-brand-navy text-brand-cream hover:bg-brand-crimson rounded-xl shadow-md transition-all active:scale-95">
+          <span class="hidden sm:inline">Shopkeeper </span>Sign In
         </button>
         <button onclick="openAuthModal('customer')"
-          class="px-3 py-1.5 text-xs font-bold bg-brand-cream border border-brand-navy/20 text-brand-navy hover:bg-brand-mustard rounded-xl transition-all active:scale-95">
-          Customer Portal
+          class="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold bg-brand-cream border border-brand-navy/20 text-brand-navy hover:bg-brand-mustard rounded-xl transition-all active:scale-95">
+          Customer<span class="hidden sm:inline"> Portal</span>
         </button>
       </div>
     </header>
@@ -558,12 +615,12 @@
   <div id="appContainer" class="hidden min-h-screen flex flex-col pb-28">
 
     <!-- Top Sticky Navbar -->
-    <nav class="sticky top-0 z-40 glass-vintage border-b border-brand-navy/10 px-4 sm:px-8 py-3">
-      <div class="max-w-5xl mx-auto flex items-center justify-between">
+    <nav class="sticky top-0 z-40 glass-vintage border-b border-brand-navy/10 px-3 sm:px-8 py-2 sm:py-3">
+      <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
 
         <!-- Brand Logo & Store Header -->
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 flex-shrink-0">
+        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 flex-shrink-0">
             <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-md">
               <path d="M15 42 Q 60 26 105 42 L 98 22 Q 60 12 22 22 Z" fill="#D90429" />
               <path d="M22 22 L 34 39 L 46 22 L 58 39 L 70 22 L 82 39 L 94 22 L 98 22 L 105 42 L 15 42 Z" fill="#FFFDD0"
@@ -577,25 +634,25 @@
               <circle cx="60" cy="92" r="2.5" fill="#FFDB58" />
             </svg>
           </div>
-          <div>
+          <div class="min-w-0">
             <h1 id="topNavAppTitle"
-              class="font-display font-black text-base sm:text-lg tracking-tight text-brand-navy leading-none">
+              class="font-display font-black text-sm sm:text-base tracking-tight text-brand-navy leading-none truncate max-w-[100px] sm:max-w-none">
               VYAPAR HUB
             </h1>
             <span id="roleBadge"
-              class="text-[10px] font-bold text-brand-navy px-2 py-0.5 rounded-full bg-brand-mustard shadow-sm inline-block mt-0.5">
+              class="text-[9px] sm:text-[10px] font-bold text-brand-navy px-1.5 sm:px-2 py-0.5 rounded-full bg-brand-mustard shadow-sm inline-block mt-0.5">
               Portal
             </span>
           </div>
         </div>
 
         <!-- Right Side Nav Actions -->
-        <div class="flex items-center gap-2 sm:gap-3">
+        <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
 
           <!-- Shopkeeper Order Notification Bell -->
           <div id="shopkeeperBellWrapper" class="relative">
             <button onclick="openOrderInboxModal()"
-              class="w-9 h-9 rounded-full bg-white border border-brand-navy/20 flex items-center justify-center text-brand-navy hover:bg-brand-crimson hover:text-white shadow-sm transition-all active:scale-95"
+              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-brand-navy/20 flex items-center justify-center text-brand-navy hover:bg-brand-crimson hover:text-white shadow-sm transition-all active:scale-95"
               title="Incoming Orders">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -612,7 +669,7 @@
           <!-- Customer Cart Quick Badge -->
           <div id="customerCartWrapper" class="relative hidden">
             <button onclick="switchCustomerTab('cart')"
-              class="w-9 h-9 rounded-full bg-white border border-brand-navy/20 flex items-center justify-center text-brand-navy hover:bg-brand-mustard shadow-sm transition-all active:scale-95"
+              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white border border-brand-navy/20 flex items-center justify-center text-brand-navy hover:bg-brand-mustard shadow-sm transition-all active:scale-95"
               title="My Cart">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -628,7 +685,7 @@
 
           <!-- Profile Trigger -->
           <button onclick="openProfileModal()"
-            class="w-9 h-9 rounded-full bg-brand-cream border border-brand-navy/20 flex items-center justify-center text-brand-navy font-black text-xs hover:border-brand-crimson shadow-sm transition-all active:scale-95 overflow-hidden"
+            class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-brand-cream border border-brand-navy/20 flex items-center justify-center text-brand-navy font-black text-xs hover:border-brand-crimson shadow-sm transition-all active:scale-95 overflow-hidden"
             title="User Profile">
             <img id="navAvatarImg" class="w-full h-full object-cover hidden" alt="Avatar" />
             <span id="navAvatarInitials">VH</span>
@@ -636,15 +693,15 @@
 
           <!-- Bilingual Toggle Switch -->
           <button id="langToggleBtn" onclick="toggleLanguage()"
-            class="px-2.5 py-1.5 rounded-full bg-white border border-brand-navy/20 text-xs font-bold text-brand-navy hover:bg-brand-mustard transition-colors flex items-center gap-1 shadow-sm">
+            class="px-2 sm:px-2.5 py-1.5 rounded-full bg-white border border-brand-navy/20 text-[11px] sm:text-xs font-bold text-brand-navy hover:bg-brand-mustard transition-colors flex items-center gap-1 shadow-sm">
             <span id="langFlag">🇮🇳</span>
             <span id="langLabel">हिंदी</span>
           </button>
 
           <!-- Return to 3D Story / Landing -->
           <button onclick="logoutToLandingPage()"
-            class="px-3 py-1.5 text-xs font-bold bg-brand-cream border border-brand-navy/20 text-brand-navy hover:bg-brand-crimson hover:text-white rounded-full transition-all shadow-sm flex items-center gap-1">
-            <span>3D Story</span>
+            class="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-bold bg-brand-cream border border-brand-navy/20 text-brand-navy hover:bg-brand-crimson hover:text-white rounded-full transition-all shadow-sm flex items-center gap-1">
+            <span class="hidden sm:inline">3D Story</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
@@ -684,7 +741,7 @@
     </div>
 
     <!-- Main Content Body -->
-    <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6">
+    <main class="flex-1 max-w-5xl w-full mx-auto p-3.5 sm:p-6 pb-28 sm:pb-16">
 
       <!-- ==================================================================== -->
       <!-- SECTION A: SHOPKEEPER VIEWS CONTAINER                                -->
@@ -694,7 +751,7 @@
         <!-- TAB 1: HOME / POS -->
         <section id="view_home" class="spa-view active-view space-y-6">
 
-          <div class="p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-lg card-3d space-y-4">
+          <div class="p-4 sm:p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-lg card-3d space-y-4">
             <div class="flex items-center justify-between">
               <div>
                 <span class="text-xs font-bold text-brand-navy/60 uppercase tracking-wider"
@@ -747,7 +804,7 @@
 
           <!-- Walk-In / Guest Mode Quick POS Terminal -->
           <div
-            class="p-6 rounded-3xl bg-gradient-to-br from-white via-brand-creambg to-white border-2 border-brand-navy/15 shadow-xl card-3d space-y-4">
+            class="p-4 sm:p-6 rounded-3xl bg-gradient-to-br from-white via-brand-creambg to-white border-2 border-brand-navy/15 shadow-xl card-3d space-y-4">
             <div
               class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-brand-navy/10">
               <div class="flex items-center gap-3">
@@ -891,7 +948,7 @@
           </div>
 
           <!-- ⚡ Quick-Tap Counter POS Grid (1-Touch Fast Billing) -->
-          <div class="p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-xl card-3d space-y-4">
+          <div class="p-4 sm:p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-xl card-3d space-y-4">
             <div
               class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-brand-navy/10">
               <div class="flex items-center gap-3">
@@ -949,7 +1006,7 @@
 
             <!-- Voice Command Entry -->
             <div
-              class="p-6 rounded-3xl glass-vintage border border-brand-navy/15 shadow-md card-3d flex flex-col justify-between space-y-4">
+              class="p-4 sm:p-6 rounded-3xl glass-vintage border border-brand-navy/15 shadow-md card-3d flex flex-col justify-between space-y-4">
               <div>
                 <div class="flex items-center justify-between mb-2">
                   <span class="text-xs font-bold text-brand-crimson uppercase tracking-wider flex items-center gap-1.5">
@@ -1021,7 +1078,7 @@
 
             <!-- Mobile Barcode Scanner -->
             <div
-              class="p-6 rounded-3xl glass-vintage border border-brand-navy/15 shadow-md card-3d flex flex-col justify-between">
+              class="p-4 sm:p-6 rounded-3xl glass-vintage border border-brand-navy/15 shadow-md card-3d flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between mb-3">
                   <span class="text-xs font-bold text-brand-navy uppercase tracking-wider flex items-center gap-1.5">
@@ -1125,7 +1182,7 @@
           </div>
 
           <!-- Real Inventory Items List -->
-          <div class="p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
+          <div class="p-4 sm:p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
             <div class="flex items-center justify-between mb-4 border-b border-brand-navy/10 pb-3">
               <h3 class="text-base font-extrabold text-brand-navy uppercase tracking-wide">
                 Current Products in Store
@@ -1142,7 +1199,7 @@
           </div>
 
           <!-- Dynamic Decay Liquidation List -->
-          <div class="p-6 rounded-3xl bg-white border border-brand-crimson/30 shadow-lg card-3d">
+          <div class="p-4 sm:p-6 rounded-3xl bg-white border border-brand-crimson/30 shadow-lg card-3d">
             <div class="flex items-center justify-between mb-4 border-b border-brand-navy/10 pb-3">
               <div class="flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-brand-crimson animate-ping"></span>
@@ -1162,7 +1219,7 @@
           </div>
 
           <!-- Low Stock Warnings -->
-          <div class="p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
+          <div class="p-4 sm:p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
             <h3 class="text-base font-extrabold text-brand-navy uppercase tracking-wide mb-4">
               Low Stock & Safety Buffer Warnings
             </h3>
@@ -1337,7 +1394,7 @@
           </div>
 
           <!-- Sales Records Data Table Container -->
-          <div class="p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d overflow-hidden">
+          <div class="p-3.5 sm:p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs text-brand-navy border-collapse">
                 <thead>
@@ -1385,7 +1442,7 @@
           </div>
 
           <!-- Smart Credit Capping & Risk Monitor Card -->
-          <div class="p-6 rounded-3xl bg-brand-navy text-brand-cream shadow-xl card-3d space-y-4">
+          <div class="p-4 sm:p-6 rounded-3xl bg-brand-navy text-brand-cream shadow-xl card-3d space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <span class="text-xs font-bold text-brand-mustard uppercase tracking-wider">TOTAL ACTIVE UDHAAR</span>
@@ -1450,7 +1507,7 @@
             </span>
           </div>
 
-          <div class="p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
+          <div class="p-4 sm:p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
             <div class="flex items-center justify-between mb-4">
               <h3 class="text-base font-extrabold text-brand-navy uppercase tracking-wide">
                 Smart Pricing Engine (Wholesale Inflation Pass-Through)
@@ -1461,7 +1518,7 @@
             </div>
           </div>
 
-          <div class="p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
+          <div class="p-4 sm:p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
             <h3 class="text-base font-extrabold text-brand-navy uppercase tracking-wide mb-3">
               Best Stock to Buy (Seasonal Advisory)
             </h3>
@@ -1484,7 +1541,7 @@
 
           <!-- Customer Address / Locality Banner -->
           <div
-            class="p-6 rounded-3xl bg-gradient-to-r from-brand-navy via-brand-navylight to-brand-navy text-brand-cream shadow-xl card-3d">
+            class="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-brand-navy via-brand-navylight to-brand-navy text-brand-cream shadow-xl card-3d">
             <div class="flex items-center justify-between mb-3">
               <span
                 class="text-xs font-extrabold uppercase tracking-widest text-brand-mustard flex items-center gap-1.5">
@@ -1614,7 +1671,7 @@
 
           <!-- Feed Header Banner -->
           <div
-            class="p-6 rounded-3xl bg-gradient-to-r from-amber-500 via-brand-mustard to-amber-600 text-brand-navy shadow-xl card-3d">
+            class="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-500 via-brand-mustard to-amber-600 text-brand-navy shadow-xl card-3d">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-black uppercase tracking-wider text-brand-navy/80 flex items-center gap-1.5">
                 <span>🔥</span>
@@ -1657,7 +1714,7 @@
 
           <!-- Total Outstanding Dues Hero Card -->
           <div
-            class="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-brand-navy via-brand-navylight to-brand-navy text-brand-cream shadow-2xl card-3d relative overflow-hidden">
+            class="p-4 sm:p-7 rounded-3xl bg-gradient-to-br from-brand-navy via-brand-navylight to-brand-navy text-brand-cream shadow-2xl card-3d relative overflow-hidden">
             <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-brand-crimson/10 rounded-full blur-2xl"></div>
 
             <div class="flex items-center justify-between mb-4">
@@ -1718,7 +1775,7 @@
           </div>
 
           <!-- Passbook Transaction History -->
-          <div class="p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
+          <div class="p-4 sm:p-6 rounded-3xl bg-white border border-brand-navy/15 shadow-md card-3d">
             <div class="flex items-center justify-between mb-4 border-b border-brand-navy/10 pb-3">
               <h3 class="text-base font-extrabold text-brand-navy uppercase tracking-wider">
                 Passbook Transaction History
@@ -2098,8 +2155,8 @@
 
   <!-- 4A. ADVANCED AUTH & LOGIN MODAL -->
   <div id="authModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 id="authModalTitle" class="font-black text-brand-navy text-xl">Vyapar Hub Access</h3>
@@ -2224,9 +2281,9 @@
 
   <!-- 4B. REAL USER PROFILE & ONBOARDING MODAL -->
   <div id="profileModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div
-      class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90vh] overflow-y-auto">
+      class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <h3 class="font-black text-brand-navy text-xl">Store Profile</h3>
         <button onclick="closeProfileModal()"
@@ -2337,9 +2394,9 @@
 
   <!-- 4C. ADD INVENTORY PRODUCT MODAL -->
   <div id="addItemModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div
-      class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90vh] overflow-y-auto">
+      class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-black text-brand-navy text-xl">+ Add New Product</h3>
@@ -2461,9 +2518,9 @@
 
   <!-- 4C-1. EDIT INVENTORY PRODUCT MODAL -->
   <div id="editItemModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div
-      class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90vh] overflow-y-auto">
+      class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-black text-brand-navy text-xl">✏️ Edit Product</h3>
@@ -2586,8 +2643,8 @@
 
   <!-- 4D. NEW KHATA CUSTOMER MODAL -->
   <div id="newKhataModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-black text-brand-navy text-xl">+ New Customer Khata</h3>
@@ -2663,8 +2720,8 @@
 
   <!-- 4D-1. KHATA TRANSACTION MODAL (Add Udhar / Record Payment) -->
   <div id="khataTxModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 id="khataTxModalTitle" class="font-black text-brand-navy text-xl">Customer Udhar / Jama</h3>
@@ -2752,8 +2809,8 @@
 
   <!-- 4D-2. EDIT CREDIT LIMIT MODAL -->
   <div id="editLimitModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-black text-brand-navy text-xl">Set Credit Limit Cap</h3>
@@ -2800,8 +2857,8 @@
 
   <!-- 4D-4. EDIT FAMILY REFERENCE / GUARANTOR MODAL -->
   <div id="editGuarantorModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-black text-brand-navy text-xl">Tag Family Reference</h3>
@@ -2841,8 +2898,8 @@
 
   <!-- 4D-3. PROMINENT CREDIT LIMIT BREACH WARNING ALERT MODAL -->
   <div id="creditLimitBreachAlertModal"
-    class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border-4 border-brand-crimson card-3d">
+    class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 space-y-4 shadow-2xl border-4 border-brand-crimson card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center gap-3">
         <div
           class="w-12 h-12 rounded-2xl bg-red-100 text-brand-crimson flex items-center justify-center text-3xl font-black shrink-0 animate-bounce">
@@ -2958,8 +3015,8 @@
 
   <!-- 4E. SHOPKEEPER ORDER INBOX MODAL -->
   <div id="orderInboxModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-black text-brand-navy text-xl flex items-center gap-2">
@@ -2980,9 +3037,9 @@
 
   <!-- 4K. DIGITAL CATALOGUE SHARING & QR CODE MODAL -->
   <div id="shareCatalogModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div
-      class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d text-center">
+      class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d text-center max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between pb-2 border-b border-brand-navy/10">
         <div class="text-left">
           <h3 class="font-black text-brand-navy text-lg flex items-center gap-1.5">
@@ -3038,8 +3095,8 @@
 
   <!-- 4G. AUTOMATED DIGITAL RECEIPT MODAL (THE THERMAL SLIP) -->
   <div id="digitalReceiptModal"
-    class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-brand-navy/20 card-3d space-y-4">
+    class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 shadow-2xl border border-brand-navy/20 card-3d space-y-4 max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between border-b border-dashed border-brand-navy/20 pb-3">
         <div class="flex items-center gap-2">
           <span class="text-2xl">🧾</span>
@@ -3134,8 +3191,8 @@
 
   <!-- 4H. PAY KHATA DUES MODAL (UPI GATEWAY) -->
   <div id="payDuesModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-black text-brand-navy text-xl">Pay Store Udhaar</h3>
@@ -3193,9 +3250,9 @@
 
   <!-- 4I. STORE CATALOG MODAL (BROWSE PRODUCTS FOR SPECIFIC SHOP) -->
   <div id="shopCatalogModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div
-      class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[85vh] flex flex-col">
+      class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] flex flex-col">
       <div class="flex items-center justify-between border-b border-brand-navy/10 pb-3">
         <div>
           <h3 id="shopCatalogModalTitle" class="font-black text-brand-navy text-xl">Store Catalog</h3>
@@ -3215,9 +3272,9 @@
 
   <!-- 4J. CUSTOMER BASKET & CHECKOUT MODAL -->
   <div id="customerCartModal"
-    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div
-      class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90vh] flex flex-col">
+      class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 card-3d max-h-[90dvh] flex flex-col">
       <div class="flex items-center justify-between border-b border-brand-navy/10 pb-3">
         <div>
           <h3 class="font-black text-brand-navy text-xl">My Daily Basket 🛒</h3>
@@ -3270,9 +3327,9 @@
 
   <!-- 4F. BARCODE SCANNER MODAL -->
   <div id="barcodeModal"
-    class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
     <div
-      class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-brand-navy/20 relative animate-modalEnter">
+      class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 space-y-4 shadow-2xl border border-brand-navy/20 relative animate-modalEnter max-h-[90dvh] overflow-y-auto overscroll-contain">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-black text-brand-navy text-lg flex items-center gap-2">
@@ -8447,57 +8504,65 @@
     });
 
     function init3DScrollExperience() {
+      const isMobile = window.innerWidth < 768;
+
       gsap.from("#heroChip", { opacity: 0, y: -20, duration: 1, ease: "power3.out" });
-      gsap.from("#heroTitle", { opacity: 0, z: -300, scale: 0.85, duration: 1.4, delay: 0.2, ease: "power4.out" });
-      gsap.from("#heroSubtitle", { opacity: 0, y: 30, duration: 1, delay: 0.5, ease: "power2.out" });
-      gsap.from("#heroScaleBox", { opacity: 0, scale: 0.7, rotateX: 25, duration: 1.4, delay: 0.6, ease: "back.out(1.5)" });
+      gsap.from("#heroTitle", { opacity: 0, z: isMobile ? -50 : -300, scale: isMobile ? 0.92 : 0.85, duration: 1.2, delay: 0.2, ease: "power4.out" });
+      gsap.from("#heroSubtitle", { opacity: 0, y: 20, duration: 1, delay: 0.4, ease: "power2.out" });
+      gsap.from("#heroScaleBox", { opacity: 0, scale: isMobile ? 0.85 : 0.7, rotateX: isMobile ? 8 : 25, duration: 1.2, delay: 0.5, ease: "back.out(1.2)" });
 
       gsap.to("#heroScaleBox", {
         scrollTrigger: {
           trigger: "#heroScene",
           start: "top top",
           end: "bottom top",
-          scrub: 1.2
+          scrub: isMobile ? 0.6 : 1.2
         },
-        z: 220,
-        rotateX: -15,
-        opacity: 0.2,
-        scale: 0.85
+        z: isMobile ? 60 : 220,
+        rotateX: isMobile ? -6 : -15,
+        opacity: 0.3,
+        scale: isMobile ? 0.9 : 0.85
       });
 
       gsap.from(".decay-text", {
-        scrollTrigger: { trigger: "#decayScene", start: "top 75%", end: "top 25%", scrub: 1 },
-        opacity: 0, x: -60, stagger: 0.2
+        scrollTrigger: { trigger: "#decayScene", start: "top 80%", end: "top 30%", scrub: isMobile ? 0.6 : 1 },
+        opacity: 0, x: isMobile ? 0 : -60, y: isMobile ? 25 : 0, stagger: 0.15
       });
 
       gsap.from("#decayCard3D", {
-        scrollTrigger: { trigger: "#decayScene", start: "top 80%", end: "center center", scrub: 1.5 },
-        opacity: 0, rotateY: 30, rotateX: 10, z: -250, scale: 0.8
+        scrollTrigger: { trigger: "#decayScene", start: "top 85%", end: "center center", scrub: isMobile ? 0.8 : 1.5 },
+        opacity: 0, rotateY: isMobile ? 6 : 30, rotateX: isMobile ? 4 : 10, z: isMobile ? -40 : -250, scale: isMobile ? 0.92 : 0.8
       });
 
       gsap.from("#khataCard3D", {
-        scrollTrigger: { trigger: "#khataScene", start: "top 80%", end: "center center", scrub: 1.5 },
-        opacity: 0, rotateY: -30, rotateX: 15, z: -200, scale: 0.85
+        scrollTrigger: { trigger: "#khataScene", start: "top 85%", end: "center center", scrub: isMobile ? 0.8 : 1.5 },
+        opacity: 0, rotateY: isMobile ? -6 : -30, rotateX: isMobile ? 4 : 15, z: isMobile ? -40 : -200, scale: isMobile ? 0.92 : 0.85
       });
 
       gsap.from(".khata-text", {
-        scrollTrigger: { trigger: "#khataScene", start: "top 75%", end: "top 30%", scrub: 1 },
-        opacity: 0, x: 60, stagger: 0.2
+        scrollTrigger: { trigger: "#khataScene", start: "top 80%", end: "top 30%", scrub: isMobile ? 0.6 : 1 },
+        opacity: 0, x: isMobile ? 0 : 60, y: isMobile ? 25 : 0, stagger: 0.15
       });
 
       gsap.from("#shopkeeperLoginCard", {
-        scrollTrigger: { trigger: "#loginSection", start: "top 80%", end: "center 70%", scrub: 1 },
-        opacity: 0, x: -40, z: -100, scale: 0.95
+        scrollTrigger: { trigger: "#loginSection", start: "top 85%", end: "center 70%", scrub: isMobile ? 0.6 : 1 },
+        opacity: 0, x: isMobile ? 0 : -40, y: isMobile ? 20 : 0, z: isMobile ? 0 : -100, scale: 0.96
       });
 
       gsap.from("#customerLoginCard", {
-        scrollTrigger: { trigger: "#loginSection", start: "top 80%", end: "center 70%", scrub: 1 },
-        opacity: 0, x: 40, z: -100, scale: 0.95
+        scrollTrigger: { trigger: "#loginSection", start: "top 85%", end: "center 70%", scrub: isMobile ? 0.6 : 1 },
+        opacity: 0, x: isMobile ? 0 : 40, y: isMobile ? 20 : 0, z: isMobile ? 0 : -100, scale: 0.96
       });
     }
 
     function initMouseFollower() {
+      const isTouch = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
       const glow = document.getElementById('cursorGlow');
+      if (isTouch) {
+        if (glow) glow.style.display = 'none';
+        return; // Skip mouse listeners on touch devices to maximize battery & 60fps scrolling
+      }
+
       let mouseX = window.innerWidth / 2;
       let mouseY = window.innerHeight / 2;
       let glowX = mouseX;

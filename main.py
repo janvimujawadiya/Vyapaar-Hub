@@ -583,7 +583,7 @@ app.add_middleware(
 )
 
 
-@app.get("/", tags=["PWA Frontend"])
+@app.api_route("/", methods=["GET", "HEAD"], tags=["PWA Frontend"])
 async def serve_frontend():
     """Serves the Vyapar Hub PWA index.html."""
     if os.path.exists("index.html"):
@@ -594,12 +594,15 @@ async def serve_frontend():
     return {"message": "Vyapar Hub Backend is running!"}
 
 
-@app.get("/api/health", tags=["General"])
+@app.api_route("/health", methods=["GET", "HEAD"], tags=["General"])
+@app.api_route("/api/health", methods=["GET", "HEAD"], tags=["General"])
+@app.api_route("/ping", methods=["GET", "HEAD"], tags=["General"])
+@app.api_route("/healthz", methods=["GET", "HEAD"], tags=["General"])
 def health_check():
-    """API Health status."""
+    """Ultra-fast, lightweight health check endpoint for UptimeRobot, cron jobs, and keep-alive pingers."""
     return {
-        "app": "Vyapar Hub SaaS Backend",
         "status": "online",
+        "app": "Vyapar Hub SaaS Backend",
         "database": engine.url.get_backend_name(),
         "server_time": datetime.utcnow().isoformat()
     }

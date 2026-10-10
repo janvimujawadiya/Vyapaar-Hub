@@ -16,6 +16,8 @@ __pycache__/
 *$py.class
 *.so
 
+update_website.bat
+
 # Virtual Environments
 venv/
 .venv/

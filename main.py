@@ -17,7 +17,7 @@ from decimal import Decimal
 from typing import List, Optional, Dict, Any, Literal
 import urllib.parse
 
-from fastapi import FastAPI, Depends, HTTPException, Query, status
+from fastapi import FastAPI, Depends, HTTPException, Query, status, Request
 from fastapi.responses import FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -57,17 +57,28 @@ MYSQL_DATABASE_URL = os.getenv(
 )
 
 def create_db_engine():
+    db_url = MYSQL_DATABASE_URL
+    # Fix Render PostgreSQL URL format
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+    # Direct SQLite connection without MySQL connect_timeout
+    if db_url.startswith("sqlite"):
+        print(f"[DATABASE] Using SQLite database engine: {db_url}")
+        return create_engine(db_url, connect_args={"check_same_thread": False})
+
     try:
-        mysql_engine = create_engine(
-            MYSQL_DATABASE_URL,
+        connect_args = {"connect_timeout": 3} if "mysql" in db_url else {}
+        cloud_engine = create_engine(
+            db_url,
             pool_pre_ping=True,
             pool_recycle=3600,
-            connect_args={"connect_timeout": 2}
+            connect_args=connect_args
         )
-        with mysql_engine.connect():
+        with cloud_engine.connect():
             pass
-        print(f"[DATABASE] Connected to MySQL database '{DB_NAME}' successfully.")
-        return mysql_engine
+        print(f"[DATABASE] Connected to database successfully.")
+        return cloud_engine
     except Exception as e:
         print(f"[DATABASE NOTICE] Using local SQLite ('sqlite:///./vyapar_hub.db') for execution ({e}).")
         return create_engine("sqlite:///./vyapar_hub.db", connect_args={"check_same_thread": False})
@@ -3848,14 +3859,14 @@ def generate_qr_svg(text: str, fill_color: str = "#001F5B", bg_color: str = "#FA
 
 
 @app.get("/api/shops/{shopkeeper_id}/share-link", tags=["Marketplace"])
-def get_shop_share_link(shopkeeper_id: int, db: Session = Depends(get_db)):
+def get_shop_share_link(shopkeeper_id: int, request: Request, db: Session = Depends(get_db)):
     """Generates a shareable store catalogue link, WhatsApp promo text, and QR code route."""
     sk = db.query(User).filter(User.user_id == shopkeeper_id, User.role == "shopkeeper").first()
     if not sk:
         raise HTTPException(status_code=404, detail="Shopkeeper not found.")
 
     shop_title = sk.shop_name or f"{sk.full_name}'s Kirana"
-    base_url = "http://localhost:8000"
+    base_url = os.getenv("APP_BASE_URL", str(request.base_url).rstrip('/'))
     share_url = f"{base_url}/#shop={sk.user_id}"
     catalog_api_url = f"{base_url}/api/customer/catalog?shopkeeper_id={sk.user_id}"
     qr_url = f"/api/shops/{sk.user_id}/qr"
@@ -3879,13 +3890,14 @@ def get_shop_share_link(shopkeeper_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/api/shops/{shopkeeper_id}/qr", tags=["Marketplace"])
-def get_shop_qr_code(shopkeeper_id: int, db: Session = Depends(get_db)):
+def get_shop_qr_code(shopkeeper_id: int, request: Request, db: Session = Depends(get_db)):
     """Returns a standalone high-resolution SVG QR code for the shopkeeper's catalogue."""
     sk = db.query(User).filter(User.user_id == shopkeeper_id, User.role == "shopkeeper").first()
     if not sk:
         raise HTTPException(status_code=404, detail="Shopkeeper not found.")
 
-    url_to_encode = f"http://localhost:8000/#shop={sk.user_id}"
+    base_url = os.getenv("APP_BASE_URL", str(request.base_url).rstrip('/'))
+    url_to_encode = f"{base_url}/#shop={sk.user_id}"
     svg_content = generate_qr_svg(url_to_encode, fill_color="#001F5B", bg_color="#FAF7EE", size_px=280)
     return Response(content=svg_content, media_type="image/svg+xml")
 
@@ -4654,4 +4666,5 @@ def get_receipt_details(receipt_id: str, db: Session = Depends(get_db)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)

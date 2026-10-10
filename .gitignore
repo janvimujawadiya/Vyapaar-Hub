@@ -1,0 +1,41 @@
+# Environment & Secrets (NEVER upload to GitHub)
+.env
+.env.*
+*.env
+!.env.example
+
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
+vyapar_hub.db
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# System & OS Files
+Desktop/
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Scratch scripts
+scratch/
